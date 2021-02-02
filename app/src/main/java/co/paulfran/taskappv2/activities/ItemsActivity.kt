@@ -55,8 +55,6 @@ class ItemsActivity : AppCompatActivity(), OnItemClickedListener {
             }
             false
         }
-
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -70,6 +68,7 @@ class ItemsActivity : AppCompatActivity(), OnItemClickedListener {
     }
 
     override fun itemLongClicked(index: Int) {
-        //
+        thisProject.items.removeAt(index)
+        itemsAdapter!!.notifyItemRemoved(index)
     }
 }
