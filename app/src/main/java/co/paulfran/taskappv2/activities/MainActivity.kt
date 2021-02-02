@@ -13,6 +13,7 @@ import co.paulfran.taskappv2.R
 import co.paulfran.taskappv2.data.AppData
 import co.paulfran.taskappv2.databinding.ActivityMainBinding
 import co.paulfran.taskappv2.listeners.OnProjectClickedListener
+import co.paulfran.taskappv2.models.ProjectWithItems
 import co.paulfran.taskappv2.models.Projects
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -83,10 +84,18 @@ class MainActivity : BaseActivity(), OnProjectClickedListener {
 
         builder.setPositiveButton("Save") { _, _ ->
             val projectName: String = input.text.toString()
-            val newProject = Projects(projectName, mutableListOf())
 
-            AppData.projects.add(newProject)
+            val newProject = Projects(projectName)
+
+            val newProjectWithItems = ProjectWithItems(newProject, mutableListOf())
+
+            AppData.projects.add(newProjectWithItems)
             projectsAdapter!!.notifyItemInserted(AppData.projects.count())
+
+            CoroutineScope(Dispatchers.IO).launch {
+                AppData.db.projectDao().insertProject(newProject)
+            }
+
 
         }
 
