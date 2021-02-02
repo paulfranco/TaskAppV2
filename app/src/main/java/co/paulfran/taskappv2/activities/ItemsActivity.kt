@@ -13,12 +13,13 @@ import co.paulfran.taskappv2.data.AppData
 import co.paulfran.taskappv2.databinding.ActivityItemsBinding
 import co.paulfran.taskappv2.listeners.OnItemClickedListener
 import co.paulfran.taskappv2.models.Item
-import co.paulfran.taskappv2.models.Project
+import co.paulfran.taskappv2.models.ProjectWithItems
+import co.paulfran.taskappv2.models.Projects
 
 class ItemsActivity : AppCompatActivity(), OnItemClickedListener {
 
     lateinit var binding: ActivityItemsBinding
-    lateinit var thisProject: Project
+    lateinit var projectWithItems: ProjectWithItems
     var itemsAdapter: ItemsAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,16 +27,16 @@ class ItemsActivity : AppCompatActivity(), OnItemClickedListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_items)
 
         val selectedIndex = intent.getIntExtra("projectIndex", 0)
-        thisProject = AppData.projects[selectedIndex]
+        projectWithItems = AppData.projects[selectedIndex]
 
-        binding.toolbarTitle.text = thisProject.name
+        binding.toolbarTitle.text = projectWithItems.project.name
 
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
         binding.itemsRv.layoutManager = LinearLayoutManager(this)
-        itemsAdapter = ItemsAdapter(thisProject, this)
+        itemsAdapter = ItemsAdapter(projectWithItems, this)
 
         binding.itemsRv.adapter = itemsAdapter
 
@@ -44,8 +45,8 @@ class ItemsActivity : AppCompatActivity(), OnItemClickedListener {
                 if (event.action == KeyEvent.ACTION_DOWN) {
                     val name: String = binding.newItemEt.text.toString()
                     val item = Item(name, false)
-                    thisProject.items.add(item)
-                    itemsAdapter!!.notifyItemInserted(thisProject.items.count())
+                    projectWithItems.items.add(item)
+                    itemsAdapter!!.notifyItemInserted(projectWithItems.items.count())
                     binding.newItemEt.text.clear()
 
                     // hide keyboard
@@ -68,12 +69,12 @@ class ItemsActivity : AppCompatActivity(), OnItemClickedListener {
     }
 
     override fun itemClicked(index: Int) {
-        thisProject.items[index].completed = !thisProject.items[index].completed
+        projectWithItems.items[index].completed = !projectWithItems.items[index].completed
         itemsAdapter!!.notifyDataSetChanged()
     }
 
     override fun itemLongClicked(index: Int) {
-        thisProject.items.removeAt(index)
+        projectWithItems.items.removeAt(index)
         itemsAdapter!!.notifyItemRemoved(index)
     }
 }
