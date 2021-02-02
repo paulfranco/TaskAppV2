@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import co.paulfran.taskappv2.R
+import co.paulfran.taskappv2.data.AppData
 import co.paulfran.taskappv2.databinding.ActivityItemsBinding
 
 class ItemsActivity : AppCompatActivity() {
@@ -14,5 +15,20 @@ class ItemsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_items)
 
+        var selectedIndex = intent.getIntExtra("projectIndex", 0)
+        var thisProject = AppData.projects[selectedIndex]
+
+        binding.toolbarTitle.text = thisProject.name
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

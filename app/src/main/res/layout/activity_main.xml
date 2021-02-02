@@ -12,7 +12,8 @@
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:text="@string/add_new_project"
-            android:layout_weight="0"/>
+            android:layout_weight="0"
+            android:onClick="createNewProject"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/projects_rv"
