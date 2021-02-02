@@ -46,8 +46,6 @@ class MainActivity : BaseActivity(), OnProjectClickedListener {
                     binding.projectsRv.adapter = projectsAdapter
                 }
             }
-
-
         } else {
             // First time application is ran
             AppData.initialize()
@@ -55,6 +53,16 @@ class MainActivity : BaseActivity(), OnProjectClickedListener {
             binding.projectsRv.adapter = projectsAdapter
 
             // Save the projects to Room
+            CoroutineScope(Dispatchers.IO).launch {
+                for (projectsWithItems in AppData.projects) {
+                    AppData.db.projectDao().insertProject(projectsWithItems.project)
+                    for (item in projectsWithItems.items) {
+                        AppData.db.projectDao().insertItem(item)
+                    }
+                }
+            }
+
+
         }
 
     }
