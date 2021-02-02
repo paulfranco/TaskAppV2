@@ -43,14 +43,14 @@ class MainActivity : BaseActivity(), OnProjectClickedListener {
                 AppData.projects = AppData.db.projectDao().getProjectsWithItems()
 
                 withContext(Dispatchers.Main) {
-                    projectsAdapter = ProjectAdapter(AppData.projects, this)
+                    projectsAdapter = ProjectAdapter(AppData.projects, this@MainActivity)
                     binding.projectsRv.adapter = projectsAdapter
                 }
             }
         } else {
             // First time application is ran
             AppData.initialize()
-            projectsAdapter = ProjectAdapter(AppData.projects, this)
+            projectsAdapter = ProjectAdapter(AppData.projects, this@MainActivity)
             binding.projectsRv.adapter = projectsAdapter
 
             // Save the projects to Room
