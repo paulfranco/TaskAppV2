@@ -1,7 +1,4 @@
 package co.paulfran.taskappv2.activities
-
-
-
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -15,7 +12,9 @@ import co.paulfran.taskappv2.R
 import co.paulfran.taskappv2.data.AppData
 import co.paulfran.taskappv2.databinding.ActivityMainBinding
 import co.paulfran.taskappv2.listeners.OnProjectClickedListener
-import co.paulfran.taskappv2.models.Project
+import co.paulfran.taskappv2.models.Projects
+import java.io.File
+import java.lang.Exception
 
 
 class MainActivity : BaseActivity(), OnProjectClickedListener {
@@ -27,11 +26,26 @@ class MainActivity : BaseActivity(), OnProjectClickedListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.projectsRv.layoutManager = LinearLayoutManager(this)
 
-        AppData.initialize()
 
         projectsAdapter = ProjectAdapter(AppData.projects, this)
         binding.projectsRv.adapter = projectsAdapter
 
+        if (databaseFileExists()) {
+            // Read content from db
+        } else {
+            // First time application is ran
+            AppData.initialize()
+            projectsAdapter = ProjectAdapter(AppData.projects, this)
+            binding.projectsRv.adapter = projectsAdapter
+
+            // Save the projects to Room
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        projectsAdapter!!.notifyDataSetChanged()
     }
 
     fun createNewProject(v: View) {
@@ -45,7 +59,7 @@ class MainActivity : BaseActivity(), OnProjectClickedListener {
 
         builder.setPositiveButton("Save") { _, _ ->
             val projectName: String = input.text.toString()
-            val newProject = Project(projectName, mutableListOf())
+            val newProject = Projects(projectName, mutableListOf())
 
             AppData.projects.add(newProject)
             projectsAdapter!!.notifyItemInserted(AppData.projects.count())
@@ -64,10 +78,22 @@ class MainActivity : BaseActivity(), OnProjectClickedListener {
         val intent = Intent(this, ItemsActivity::class.java)
         intent.putExtra("projectIndex", index)
         startActivity(intent)
+
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
     override fun projectLongClickedListener(index: Int) {
         // Delete group
+        AppData.projects.removeAt(index)
+        projectsAdapter!!.notifyItemRemoved(index)
+    }
+
+    private fun databaseFileExists(): Boolean {
+        return try {
+            File(getDatabasePath(AppData.dbFileName).absolutePath).exists()
+        } catch (e: Exception) {
+            return false
+        }
     }
 }
 
