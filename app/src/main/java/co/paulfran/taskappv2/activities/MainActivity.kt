@@ -7,12 +7,17 @@ import android.view.View
 import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import co.paulfran.taskappv2.ProjectDatabase
 import co.paulfran.taskappv2.adapters.ProjectAdapter
 import co.paulfran.taskappv2.R
 import co.paulfran.taskappv2.data.AppData
 import co.paulfran.taskappv2.databinding.ActivityMainBinding
 import co.paulfran.taskappv2.listeners.OnProjectClickedListener
 import co.paulfran.taskappv2.models.Projects
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.Exception
 
@@ -26,12 +31,23 @@ class MainActivity : BaseActivity(), OnProjectClickedListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.projectsRv.layoutManager = LinearLayoutManager(this)
 
-
         projectsAdapter = ProjectAdapter(AppData.projects, this)
         binding.projectsRv.adapter = projectsAdapter
 
+        AppData.db = ProjectDatabase.getDatabase(this)!!
+
         if (databaseFileExists()) {
-            // Read content from db
+            // Read content from Room db
+            CoroutineScope(Dispatchers.IO).launch {
+                AppData.projects = AppData.db.projectDao().getProjectsWithItems()
+
+                withContext(Dispatchers.Main) {
+                    projectsAdapter = ProjectAdapter(AppData.projects, this)
+                    binding.projectsRv.adapter = projectsAdapter
+                }
+            }
+
+
         } else {
             // First time application is ran
             AppData.initialize()
