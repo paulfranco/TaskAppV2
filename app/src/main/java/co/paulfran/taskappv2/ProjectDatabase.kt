@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import co.paulfran.taskappv2.data.AppData
 import co.paulfran.taskappv2.models.Items
 import co.paulfran.taskappv2.models.Projects
 
@@ -15,7 +16,7 @@ abstract class ProjectDatabase: RoomDatabase() {
         fun getDatabase(context: Context): ProjectDatabase? {
             if (instance == null) {
                 synchronized(ProjectDatabase::class) {
-                    instance = Room.databaseBuilder(context.applicationContext, ProjectDatabase::class.java, "temporary_name").build()
+                    instance = Room.databaseBuilder(context.applicationContext, ProjectDatabase::class.java, AppData.dbFileName).build()
                 }
             }
             return instance
