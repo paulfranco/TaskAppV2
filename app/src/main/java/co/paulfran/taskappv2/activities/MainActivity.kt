@@ -117,8 +117,16 @@ class MainActivity : BaseActivity(), OnProjectClickedListener {
 
     override fun projectLongClickedListener(index: Int) {
         // Delete group
+        val projectName = AppData.projects[index].project.name
+
+        CoroutineScope(Dispatchers.IO).launch {
+            AppData.db.projectDao().deleteProject(projectName)
+            AppData.db.projectDao().deleteItemsOfProject(projectName)
+        }
+
         AppData.projects.removeAt(index)
         projectsAdapter!!.notifyItemRemoved(index)
+        projectsAdapter!!.notifyItemRangeChanged(index, AppData.projects.count())
     }
 
     private fun databaseFileExists(): Boolean {
