@@ -82,6 +82,13 @@ class ItemsActivity : AppCompatActivity(), OnItemClickedListener {
     }
 
     override fun itemLongClicked(index: Int) {
+        val projectName = projectWithItems.project.name
+        val itemName = projectWithItems.items[index].name
+
+        CoroutineScope(Dispatchers.IO).launch {
+            AppData.db.projectDao().deleteItem(projectName, itemName)
+        }
+
         projectWithItems.items.removeAt(index)
         itemsAdapter!!.notifyItemRemoved(index)
     }
