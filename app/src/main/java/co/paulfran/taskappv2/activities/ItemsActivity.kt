@@ -12,9 +12,11 @@ import co.paulfran.taskappv2.adapters.ItemsAdapter
 import co.paulfran.taskappv2.data.AppData
 import co.paulfran.taskappv2.databinding.ActivityItemsBinding
 import co.paulfran.taskappv2.listeners.OnItemClickedListener
-import co.paulfran.taskappv2.models.Item
+import co.paulfran.taskappv2.models.Items
 import co.paulfran.taskappv2.models.ProjectWithItems
-import co.paulfran.taskappv2.models.Projects
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ItemsActivity : AppCompatActivity(), OnItemClickedListener {
 
@@ -44,8 +46,14 @@ class ItemsActivity : AppCompatActivity(), OnItemClickedListener {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 if (event.action == KeyEvent.ACTION_DOWN) {
                     val name: String = binding.newItemEt.text.toString()
-                    val item = Item(name, false)
+                    val item = Items(name, projectWithItems.project.name,false)
+
                     projectWithItems.items.add(item)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        AppData.db.projectDao().insertItem(item)
+                    }
+
                     itemsAdapter!!.notifyItemInserted(projectWithItems.items.count())
                     binding.newItemEt.text.clear()
 
