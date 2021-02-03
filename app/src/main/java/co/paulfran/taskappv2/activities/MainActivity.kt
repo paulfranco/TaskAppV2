@@ -127,6 +127,8 @@ class MainActivity : BaseActivity(), OnProjectClickedListener {
         AppData.projects.removeAt(index)
         projectsAdapter!!.notifyItemRemoved(index)
         projectsAdapter!!.notifyItemRangeChanged(index, AppData.projects.count())
+
+        showErrorSnackBar("Deleted ${projectName} Project")
     }
 
     private fun databaseFileExists(): Boolean {
