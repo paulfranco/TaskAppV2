@@ -18,7 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ItemsActivity : AppCompatActivity(), OnItemClickedListener {
+class ItemsActivity : BaseActivity(), OnItemClickedListener {
 
     lateinit var binding: ActivityItemsBinding
     lateinit var projectWithItems: ProjectWithItems
@@ -100,5 +100,7 @@ class ItemsActivity : AppCompatActivity(), OnItemClickedListener {
 
         projectWithItems.items.removeAt(index)
         itemsAdapter!!.notifyItemRemoved(index)
+
+        showErrorSnackBar("Deleted ${itemName} from ${projectName}")
     }
 }
