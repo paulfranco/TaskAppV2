@@ -4,10 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import co.paulfran.taskappv2.listeners.OnProjectClickedListener
+import co.paulfran.taskappv2.models.ProjectWithItems
 import co.paulfran.taskappv2.viewholder.ProjectsViewHolder
-import co.paulfran.taskappv2.models.Project
+import co.paulfran.taskappv2.models.Projects
 
-class ProjectAdapter(private val list: List<Project>, listenerContext: OnProjectClickedListener): RecyclerView.Adapter<ProjectsViewHolder>() {
+class ProjectAdapter(private val list: List<ProjectWithItems>, listenerContext: OnProjectClickedListener): RecyclerView.Adapter<ProjectsViewHolder>() {
 
     private var projectListener: OnProjectClickedListener = listenerContext
 
@@ -17,8 +18,8 @@ class ProjectAdapter(private val list: List<Project>, listenerContext: OnProject
     }
 
     override fun onBindViewHolder(holder: ProjectsViewHolder, position: Int) {
-        val project = list[position]
-        holder.bind(project)
+        val projectWithItems = list[position]
+        holder.bind(projectWithItems)
 
         holder.itemView.setOnClickListener {
             projectListener.projectClicked(position)

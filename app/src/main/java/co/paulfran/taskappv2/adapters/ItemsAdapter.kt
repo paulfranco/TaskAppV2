@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import co.paulfran.taskappv2.listeners.OnItemClickedListener
-import co.paulfran.taskappv2.models.Item
-import co.paulfran.taskappv2.models.Project
+import co.paulfran.taskappv2.models.Items
+import co.paulfran.taskappv2.models.ProjectWithItems
 import co.paulfran.taskappv2.viewholder.ItemsViewHolder
 
-class ItemsAdapter(private val project: Project, listenerContext: OnItemClickedListener): RecyclerView.Adapter<ItemsViewHolder>() {
+class ItemsAdapter(private val projectWithItems: ProjectWithItems, listenerContext: OnItemClickedListener): RecyclerView.Adapter<ItemsViewHolder>() {
 
     private var itemsListener: OnItemClickedListener = listenerContext
 
@@ -19,7 +19,7 @@ class ItemsAdapter(private val project: Project, listenerContext: OnItemClickedL
     }
 
     override fun onBindViewHolder(holder: ItemsViewHolder, position: Int) {
-        val item: Item = project.items[position]
+        val item: Items = projectWithItems.items[position]
         holder.bind(item)
 
         holder.itemView.setOnClickListener {
@@ -33,6 +33,6 @@ class ItemsAdapter(private val project: Project, listenerContext: OnItemClickedL
 
     }
 
-    override fun getItemCount(): Int = project.items.size
+    override fun getItemCount(): Int = projectWithItems.items.size
 
 }

@@ -35,7 +35,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <EditText
-            android:id="@+id/new_project_et"
+            android:id="@+id/new_item_et"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:ems="10"
@@ -45,6 +45,7 @@
             android:layout_weight="0"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/items_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
